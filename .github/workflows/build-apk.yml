@@ -19,6 +19,16 @@ jobs:
         with:
           lfs: true
 
+      - name: Setup Godot Home and Templates
+        run: |
+          mkdir -p "$HOME/.local/share" "$HOME/.config"
+          if [ -d "/root/.local/share/godot" ]; then
+            cp -rn /root/.local/share/godot "$HOME/.local/share/"
+          fi
+          if [ -d "/root/.config/godot" ]; then
+            cp -rn /root/.config/godot "$HOME/.config/"
+          fi
+
       - name: Restore game assets if needed
         run: |
           if [ ! -d "assets" ] || [ -z "$(ls -A assets 2>/dev/null)" ]; then
