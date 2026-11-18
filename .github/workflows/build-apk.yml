@@ -29,17 +29,13 @@ jobs:
             cp -rn /root/.config/godot "$HOME/.config/"
           fi
 
-      - name: Restore game assets if needed
+      - name: Restore game assets (keep committed overrides)
         run: |
-          if [ ! -d "assets" ] || [ -z "$(ls -A assets 2>/dev/null)" ]; then
-            echo "Assets directory is missing or empty, downloading v10.0.0 assets package..."
-            wget -q -L https://github.com/noorapp10000-web/selim-godot-game/releases/download/v10.0.0/selim_godot_game_v10.zip -O /tmp/v10.zip
-            unzip -q -o /tmp/v10.zip "assets/*" "icon.png" "icon.png.import" || true
-            rm -f /tmp/v10.zip
-            echo "Assets restored successfully."
-          else
-            echo "Assets directory already present."
-          fi
+          echo "Downloading v10.0.0 assets package..."
+          wget -q -L https://github.com/noorapp10000-web/selim-godot-game/releases/download/v10.0.0/selim_godot_game_v10.zip -O /tmp/v10.zip
+          # -n: never overwrite files already committed to the repo (new icon, new voice clip)
+          unzip -q -n /tmp/v10.zip "assets/*" "icon.png" "icon.png.import" || true
+          rm -f /tmp/v10.zip
           mkdir -p build
 
       - name: Export Android APK
